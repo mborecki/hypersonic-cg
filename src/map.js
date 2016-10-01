@@ -12,6 +12,10 @@ class Tile {
         this.clearTempValues();
     }
 
+    get cords() {
+        return [this.x, this.y];
+    }
+
     initStableValues() {
         this.item = false;
         this.itemType = null;
@@ -59,7 +63,13 @@ class Tile {
 
     setBomb(timer, range, owner) {
         this.bomb = true;
-        this.bombTimer = timer;
+
+        if (this.bombTimer) {
+            this.bombTimer = Math.min(this.bombTimer, timer)
+        } else {
+            this.bombTimer = timer;
+        }
+
         this.bombOwners.add(owner);
         this.bombRange = range;
 
@@ -67,6 +77,8 @@ class Tile {
     }
 
     setInBombRange(owner, timer) {
+        printErr('setInBombRange', this.cords);
+        this.isInBombRange = true;
         this.bombTimer = timer;
         this.bombOwners.add(owner);
     }
@@ -134,6 +146,7 @@ class MapAPI {
     }
 
     setBomb(cords, timer, range, owner) {
+        printErr('setBomb:', cords)
         let [x,y] = cords;
 
         let tile = this.getTile(cords);
@@ -142,7 +155,7 @@ class MapAPI {
 
         [[0,-1], [0, 1], [-1, 0], [1, 0]].forEach(([vx, vy]) => {
             for (let i = 1; i < range; i++) {
-                let c = [x + vx, y + vy];
+                let c = [x + vx*i, y + vy*i];
                 let t = this.getTile(c);
                 if (t) {
                     if (t.wall) {

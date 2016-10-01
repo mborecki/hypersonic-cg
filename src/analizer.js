@@ -124,7 +124,7 @@ const Analizer = {
 
             let t = WMap.getTile(cords);
 
-            if (t && t.inBombRange && t.bombOwner !== CONFIG.MY_ID) {
+            if (t && t.inBombRange && iteration === t.bombTimer) {
                 printErr('DANGER!', cords, CONFIG.MY_ID, t.bombOwner);
                 return;
             }
@@ -168,7 +168,14 @@ const Analizer = {
         if(!bestTargetList.length) {
             return null;
         } else {
-            return bestTargetList[0];
+            let t = bestTargetList.shift();
+            printErr(t, WMap.getTile(t).cords, WMap.getTile(t).isInBombRange, bestTargetList.length);
+
+            while (WMap.getTile(t).isInBombRange && bestTargetList.length) {
+                t = bestTargetList.shift();
+            }
+
+            return t || null;
         }
     }
 };
