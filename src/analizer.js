@@ -113,8 +113,7 @@ const Analizer = {
         printErr('findBestTarget', seed);
         let [x,y] = seed;
 
-        let bestTargetCount = 1;
-        let bestTargetList = [];
+        let bestTargetList = [[],[],[],[]];
 
         let list = [];
         let map = new Array(WMap.size).fill(null);
@@ -154,29 +153,32 @@ const Analizer = {
 
             let targets = Analizer.countTargets([x,y], bombRange);
 
-            if (targets > bestTargetCount) {
-                bestTargetCount = targets;
-                bestTargetList = [[x,y]];
-            } else if (targets == bestTargetCount) {
-                bestTargetList.push([x,y]);
+
+
+            if (targets > 0) {
+                bestTargetList[targets-1].push([x,y])
             }
         }
 
-        printErr('bestTargetCount', bestTargetCount)
-        printErr('bestTargetList', bestTargetList)
+        // printErr('bestTargetList 1', bestTargetList[1]);
+        // printErr('bestTargetList 2', bestTargetList[2]);
+        // printErr('bestTargetList 3', bestTargetList[3]);
+        // printErr('bestTargetList 4', bestTargetList[4]);
 
-        if(!bestTargetList.length) {
-            return null;
-        } else {
-            let t = bestTargetList.shift();
-            printErr(t, WMap.getTile(t).cords, WMap.getTile(t).isInBombRange, bestTargetList.length);
+        let targetList;
+        while(targetList = bestTargetList.pop()) {
+            // printErr('checkList:', targetList);
+            for(let i=0; i < targetList.length; i++) {
+                let t = WMap.getTile(targetList[i]);
+                // printErr('checkTile:', targetList[i], !t.isInBombRange)
 
-            while (WMap.getTile(t).isInBombRange && bestTargetList.length) {
-                t = bestTargetList.shift();
+                if (!t.isInBombRange) {
+                    return t.cords;
+                }
             }
-
-            return t || null;
         }
+
+        return null;
     }
 };
 
