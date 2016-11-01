@@ -1,7 +1,10 @@
-import WMap from 'map';
+declare let printErr;
+
+import WMap from './map';
+import CONFIG from './config';
 
 const Analizer = {
-    data: {},
+    data: {} as any,
 
     clear: () => {
         Analizer.data = {
@@ -123,8 +126,7 @@ const Analizer = {
 
             let t = WMap.getTile(cords);
 
-            if (t && t.inBombRange && iteration === t.bombTimer) {
-                printErr('DANGER!', cords, CONFIG.MY_ID, t.bombOwner);
+            if (t && t.isInBombRange && iteration === t.isInBombRange) {
                 return;
             }
 

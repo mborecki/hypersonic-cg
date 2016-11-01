@@ -1,14 +1,14 @@
-import WMap from 'map';
-import Analizer from 'analizer';
-import CONFIG from 'config';
-import ME from 'me';
+import WMap from './map';
+import Analizer from './analizer';
+import CONFIG from './config';
+import ME from './me';
 
 const AI_FIND_BEST_TARGET = 0;
 
 const AI = {
     mode: AI_FIND_BEST_TARGET,
 
-    run: () => {
+    run: () : string => {
 
         let action = 'MOVE';
         let target = [Math.floor(WMap.width / 2), Math.floor(WMap.height / 2)];
@@ -33,6 +33,8 @@ const AI = {
 
             break;
         }
+
+        // return 1;
 
         return `${action} ${target[0]} ${target[1]}`;
     }

@@ -1,14 +1,15 @@
-import {debug} from 'debug';
-import CONFIG from 'config';
+declare let print;
 
-import Input from 'input';
+import {debug} from './debug';
 
-import WMap from 'map';
-import Analizer from 'analizer';
-import AI from 'ai';
-import ME from 'me';
+import Input from './input';
 
-Input.readInitData(CONFIG);
+import WMap from './map';
+import Analizer from './analizer';
+import AI from './ai';
+import ME from './me';
+
+Input.readInitData();
 
 // game loop
 while (true) {

@@ -1,18 +1,18 @@
 {
-  "name": "hybersonic-cg",
+  "name": "hypersonic-cg",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
-    "watch": "webpack --watch --progress"
+    "build": "browserify ./src/app.ts -p tsify > bundle.js",
+    "watch": "rollup -c --watch"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "babel-core": "^6.16.0",
-    "babel-loader": "^6.2.5",
-    "babel-preset-es2015": "^6.16.0",
-    "webpack": "^1.13.2"
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "^13.1.1",
+    "tsify": "^2.0.2",
+    "typescript": "^2.0.6"
   }
 }

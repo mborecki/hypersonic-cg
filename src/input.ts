@@ -1,6 +1,8 @@
-import WMap from 'map';
-import ME from 'me';
-import CONFIG from 'config';
+declare let readline;
+
+import WMap from './map';
+import ME from './me';
+import CONFIG from './config';
 
 export default class Input {
     static readInitData() {

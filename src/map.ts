@@ -1,9 +1,33 @@
+declare let printErr;
+
+type Cords = [number, number];
+
 let data = null;
 
-import Analizer from 'analizer';
+import Analizer from './analizer';
 
 class Tile {
-    constructor([x,y]) {
+    x: number
+    y: number
+    item: boolean
+    itemType: number
+    wall: boolean
+    bombOwners: Set<number>
+
+    // czy jest pusty
+    empty: boolean
+
+    // czy jest tu skrzynia
+    box: boolean
+    targets: number
+
+    bomb: boolean
+    bombRange: number
+    isInBombRange: boolean
+    bombTimer: number
+
+
+    constructor([x, y]: Cords) {
         //wspolrzedne
         this.x = x;
         this.y = y;
@@ -25,10 +49,8 @@ class Tile {
     }
 
     clearTempValues() {
-        // czy jest pusty
         this.empty = true;
 
-        // czy jest tu skrzynia
         this.box = false;
 
         this.targets = 0;
@@ -48,7 +70,7 @@ class Tile {
         this.bomb = false;
     }
 
-    setBox(itemType) {
+    setBox(itemType = null) {
         this.empty = false;
         this.box = true;
         this.bomb = false;
@@ -89,6 +111,11 @@ class Tile {
 }
 
 class MapAPI {
+    data: Tile[]
+    _width: number
+    _height: number
+    _size: number
+
     init (width, height) {
 
         this.width = width;
@@ -96,7 +123,7 @@ class MapAPI {
 
         this.data = [];
 
-        for (let i = 0; i < this.size; i++) {
+        for (let i:number = 0; i < this.size; i++) {
             this.data[i] = new Tile(this.itc(i));
         }
     }
@@ -136,7 +163,7 @@ class MapAPI {
         });
     }
 
-    getTile(cords) {
+    getTile(cords: Cords) : Tile {
         let [x,y] = cords;
         if (this.inMap(cords)) {
             return this.data[this.cti(cords)];
@@ -145,7 +172,7 @@ class MapAPI {
         }
     }
 
-    setBomb(cords, timer, range, owner) {
+    setBomb(cords: Cords, timer, range, owner) {
         printErr('setBomb:', cords)
         let [x,y] = cords;
 
@@ -155,7 +182,7 @@ class MapAPI {
 
         [[0,-1], [0, 1], [-1, 0], [1, 0]].forEach(([vx, vy]) => {
             for (let i = 1; i < range; i++) {
-                let c = [x + vx*i, y + vy*i];
+                let c: Cords = [x + vx*i, y + vy*i];
                 let t = this.getTile(c);
                 if (t) {
                     if (t.wall) {
@@ -172,7 +199,7 @@ class MapAPI {
         });
     }
 
-    setBox(cords) {
+    setBox(cords: Cords) {
         this.getTile(cords).setBox();
         Analizer.addBox(cords);
     }
@@ -225,7 +252,7 @@ class MapAPI {
         let t = this.getTile(cords);
 
         if (t) {
-            return !!t.box && !t.inBombRange;
+            return !!t.box && !t.isInBombRange;
         }
 
         return false;
@@ -245,7 +272,7 @@ class MapAPI {
 
 // -----   UTILS
 
-    itc(index) {
+    itc(index: number) : Cords {
         return [index % this.width, Math.floor(index / this.width)];
     }
 
